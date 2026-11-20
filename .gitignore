@@ -221,3 +221,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- icloud-shared-album-downloader ---
+# Your album links: anyone with a link can view the album, so keep it private.
+albums.txt
+# Downloaded photos and sync state
+photos/
+.sync-state.json
+*.part

@@ -1,0 +1,5 @@
+# One public iCloud shared album URL per line.
+# Blank lines and anything after a # are ignored.
+# Copy this file to albums.txt and replace the example below with your own links.
+
+https://photos.icloud.com/shared/album/YOUR_ALBUM_TOKEN_HERE/
