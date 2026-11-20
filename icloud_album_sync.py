@@ -491,7 +491,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                              "MMM-BackgroundSlideshow's 'position' info (off by default)")
     parser.add_argument("--dry-run", action="store_true",
                         help="show what would happen without downloading or deleting anything")
-    parser.add_argument("-v", "--verbose", action="store_true", help="show debug output")
+    parser.add_argument("-d", "--debug", action="store_true",
+                        help="show progress and debug output (by default only "
+                             "warnings and errors are shown)")
     args = parser.parse_args(argv)
 
     if not 1 <= args.quality <= 95:
@@ -510,9 +512,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
+    # Quiet by default so scheduled runs only log problems. A dry run still
+    # prints its report, since showing what would happen is its whole purpose.
+    if args.debug:
+        level = logging.DEBUG
+    elif args.dry_run:
+        level = logging.INFO
+    else:
+        level = logging.WARNING
+    logging.basicConfig(level=level,
                         format="%(asctime)s %(levelname)s %(message)s", datefmt="%H:%M:%S")
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    # Third-party libraries are very chatty at debug level; keep only their problems.
+    for noisy in ("urllib3", "PIL"):
+        logging.getLogger(noisy).setLevel(logging.WARNING)
 
     if not args.albums.exists():
         log.error("Album list %s not found. Copy albums.example.txt to albums.txt and "

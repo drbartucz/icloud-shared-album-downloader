@@ -61,7 +61,7 @@ Photos are saved under `photos/<Album Title>/` with names like `20261118-143005_
 | `--no-prune` | pruning on | Keep local photos even after they are removed from the album |
 | `--keep-location` | off | Write GPS coordinates into saved photos |
 | `--dry-run` | off | Show what would happen without changing anything |
-| `-v`, `--verbose` | off | Show debug output |
+| `-d`, `--debug` | off | Show progress and debug output |
 
 **Resize modes**
 
@@ -76,6 +76,10 @@ Photos are rotated upright using their EXIF orientation. The saved JPEGs keep on
 **Source quality.** By default the script downloads Apple's "medium" JPEG, which is about 2048 pixels on the long edge. That is more than enough for 1080p and avoids HEIC decoding. Use `--source original` for 4K screens. It needs `pip install pillow-heif` because most iPhone originals are HEIC.
 
 If a photo is edited in Photos, the script notices the change and downloads it again. Changing `--width`, `--height`, `--mode`, `--quality`, `--source` or `--keep-location` also re-processes existing photos so the folder stays consistent.
+
+### Output
+
+By default the script prints nothing unless something goes wrong. Only warnings and errors are shown, which keeps scheduled runs from filling a log file. Use `--debug` to see each photo as it is saved, plus detailed debugging output. `--dry-run` always prints what it would do.
 
 ### Exit codes
 
@@ -128,6 +132,8 @@ Notes:
 ```cron
 */15 * * * * cd /home/pi/icloud-shared-album-downloader && .venv/bin/python icloud_album_sync.py -o /home/pi/MagicMirror/photos >> sync.log 2>&1
 ```
+
+Because normal runs print nothing, `sync.log` only grows when something goes wrong.
 
 **Windows (Task Scheduler)**:
 
